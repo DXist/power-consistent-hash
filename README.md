@@ -11,6 +11,6 @@ The hashing algorithm execution time doesn't depend on number of hashing time.
 
 2.6GHz Intel Core i7 hashes 1k 64 bit keys in ~6.4 microseconds. The left axis is a number of consistent hash buckets:
 
-![Benchmark of hashing 1k keys](./pch_bucket_scaling.svg)
+![Benchmark of hashing 1k keys](https://raw.githubusercontent.com/DXist/power-consistent-hash/main/pch_bucket_scaling.svg)
 
 With optional integration of [SeaHash](https://gitlab.redox-os.org/redox-os/seahash) to produce 64 bit key fingerprints hashing of 1k UUIDs takes around ~25 microseconds.

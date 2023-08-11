@@ -9,6 +9,7 @@ repository = "https://github.com/DXist/power-consistent-hash"
 license = "Apache-2.0"
 keywords = ["consistent-hashing", "load-balancing", "sharding"]
 categories = ["algorithms"]
+exclude = ["*.svg"]
 
 [dependencies]
 thiserror = "1"
