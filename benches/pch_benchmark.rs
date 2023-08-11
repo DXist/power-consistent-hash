@@ -1,10 +1,6 @@
-use std::collections::hash_map::DefaultHasher;
-use std::hash::Hasher;
+use std::{collections::hash_map::DefaultHasher, hash::Hasher};
 
-use criterion::BenchmarkId;
-use criterion::Criterion;
-use criterion::Throughput;
-use criterion::{criterion_group, criterion_main};
+use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
 use power_consistent_hash::PowerConsistentHasher;
 
 fn bench_pch_1000(c: &mut Criterion) {

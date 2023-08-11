@@ -1,10 +1,12 @@
-use pcg32::Pcg32;
 use std::arch::asm;
+
+use pcg32::Pcg32;
 use thiserror::Error;
 use tracing::trace;
 
 mod pcg32;
 
+/// State of power consistent hash algorithm
 pub struct PowerConsistentHasher {
     // number of buckets
     n: u32,
@@ -21,13 +23,13 @@ pub enum PowerConsistentHasherError {
 }
 
 impl PowerConsistentHasher {
-    pub fn try_new(n: u32) -> Result<Self, PowerConsistentHasherError> {
-        if n < 2 {
+    pub fn try_new(num_of_buckets: u32) -> Result<Self, PowerConsistentHasherError> {
+        if num_of_buckets < 2 {
             return Err(PowerConsistentHasherError::NotEnoughBuckets);
         }
 
         // closest larger power of 2
-        let mut m = n;
+        let mut m = num_of_buckets;
         // https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
         m -= 1;
         m |= m >> 1;
@@ -40,19 +42,20 @@ impl PowerConsistentHasher {
         let m_half_minus_one = (m >> 1) - 1;
 
         trace!(
-            n = n,
+            n = num_of_buckets,
             upper_power_of_two = m,
             "PowerConsistentHasher is initialized"
         );
 
         Ok(Self {
-            n,
+            n: num_of_buckets,
             m_minus_one,
             m_half_minus_one,
         })
     }
 
     #[cfg(feature = "seahash")]
+    /// Hash contiguous bytes buffer
     pub fn hash_bytes(&self, buf: &[u8]) -> u32 {
         let key = seahash::hash(buf);
         self.hash_u64(key)

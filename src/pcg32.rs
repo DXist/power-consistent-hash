@@ -11,9 +11,7 @@ const MULTIPLIER: u64 = 6364136223846793005;
 ///
 /// This is a 64-bit LCG with explicitly chosen stream with the PCG-XSH-RR
 /// output function. This combination is the standard `pcg32`.
-///
 #[derive(Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde1", derive(Serialize, Deserialize))]
 pub struct Lcg64Xsh32 {
     state: u64,
     increment: u64,

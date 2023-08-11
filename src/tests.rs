@@ -1,7 +1,8 @@
-use super::PowerConsistentHasher;
-use std::collections::hash_map::DefaultHasher;
-use std::hash::Hasher;
+use std::{collections::hash_map::DefaultHasher, hash::Hasher};
+
 use tracing::{debug, trace};
+
+use super::PowerConsistentHasher;
 
 #[test]
 fn test_consistent_hashing_backwards_compatibility() {

@@ -1,7 +1,4 @@
-use criterion::BenchmarkId;
-use criterion::Criterion;
-use criterion::Throughput;
-use criterion::{criterion_group, criterion_main};
+use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
 use power_consistent_hash::PowerConsistentHasher;
 use uuid::Uuid;
 
