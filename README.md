@@ -7,7 +7,7 @@ Target use cases - load balancing and data sharding.
 The hashing algorithm execution time doesn't depend on number of hashing time.
 
 
-# Benchmark - hashing 1k 64 bit key batches
+## Benchmark - hashing 1k 64 bit key batches
 
 2.6GHz Intel Core i7 hashes 1k 64 bit keys in ~6.4 microseconds. The left axis is a number of consistent hash buckets:
 
