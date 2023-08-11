@@ -5,20 +5,42 @@ use tracing::{debug, trace};
 
 #[test]
 fn test_consistent_hashing_backwards_compatibility() {
-    let hasher = PowerConsistentHasher::try_new(3).unwrap();
+    let hasher = PowerConsistentHasher::try_new(96).unwrap();
     let key0 = 0;
-    assert_eq!(hasher.hash(key0), 0);
+    assert_eq!(hasher.hash_u64(key0), 0);
     let key1 = 8;
-    assert_eq!(hasher.hash(key1), 0);
+    assert_eq!(hasher.hash_u64(key1), 12);
     let key2 = 9;
-    assert_eq!(hasher.hash(key2), 1);
+    assert_eq!(hasher.hash_u64(key2), 12);
     let key3 = 10;
-    assert_eq!(hasher.hash(key3), 2);
-    assert_eq!(hasher.hash(key3), 2);
+    assert_eq!(hasher.hash_u64(key3), 13);
+    assert_eq!(hasher.hash_u64(key3), 13);
     let key4 = 11;
-    assert_eq!(hasher.hash(key4), 1);
+    assert_eq!(hasher.hash_u64(key4), 15);
     let key5 = 12;
-    assert_eq!(hasher.hash(key5), 0);
+    assert_eq!(hasher.hash_u64(key5), 11);
+    let key6 = 999;
+    assert_eq!(hasher.hash_u64(key6), 89);
+}
+#[cfg(feature = "seahash")]
+#[test]
+fn test_seahash_consistent_hashing_backwards_compatibility() {
+    let hasher = PowerConsistentHasher::try_new(96).unwrap();
+    let key0 = 0_u64;
+    assert_eq!(hasher.hash_bytes(&key0.to_le_bytes()), 29);
+    let key1 = 8_u64;
+    assert_eq!(hasher.hash_bytes(&key1.to_le_bytes()), 43);
+    let key2 = 9_u64;
+    assert_eq!(hasher.hash_bytes(&key2.to_le_bytes()), 16);
+    let key3 = 10_u64;
+    assert_eq!(hasher.hash_bytes(&key3.to_le_bytes()), 86);
+    assert_eq!(hasher.hash_bytes(&key3.to_le_bytes()), 86);
+    let key4 = 11_u64;
+    assert_eq!(hasher.hash_bytes(&key4.to_le_bytes()), 59);
+    let key5 = 12_u64;
+    assert_eq!(hasher.hash_bytes(&key5.to_le_bytes()), 91);
+    let key6 = 999_u64;
+    assert_eq!(hasher.hash_bytes(&key6.to_le_bytes()), 27);
 }
 
 #[test]
@@ -32,7 +54,7 @@ fn test_consistent_hashing_disbalance() {
         let mut hasher = DefaultHasher::new();
         hasher.write(&k.to_le_bytes());
         let key = hasher.finish();
-        let b = h.hash(key);
+        let b = h.hash_u64(key);
         buckets[b as usize] += 1;
     }
     debug!(buckets = format_args!("{:#?}", buckets));
@@ -57,7 +79,7 @@ fn test_consistency() {
         let mut hasher = DefaultHasher::new();
         hasher.write(&k.to_le_bytes());
         let key = hasher.finish();
-        let b = h.hash(key);
+        let b = h.hash_u64(key);
         hashed_buckets[k] = b;
     }
 
@@ -69,7 +91,7 @@ fn test_consistency() {
         let mut hasher = DefaultHasher::new();
         hasher.write(&k.to_le_bytes());
         let key = hasher.finish();
-        let b = h.hash(key);
+        let b = h.hash_u64(key);
         if hashed_buckets[k] != b {
             relocated += 1;
         }

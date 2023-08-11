@@ -52,7 +52,16 @@ impl PowerConsistentHasher {
         })
     }
 
-    pub fn hash(&self, key: u64) -> u32 {
+    #[cfg(feature = "seahash")]
+    pub fn hash_bytes(&self, buf: &[u8]) -> u32 {
+        let key = seahash::hash(buf);
+        self.hash_u64(key)
+    }
+
+    /// Hash u64 consistently.
+    ///
+    /// Used when keys are sufficiently distributed over u64 range
+    pub fn hash_u64(&self, key: u64) -> u32 {
         let (r1, maybe_rng) = consistent_hash_power_of_two(key, self.m_minus_one);
 
         if r1 < self.n {
